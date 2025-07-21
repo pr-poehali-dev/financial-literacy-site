@@ -25,6 +25,20 @@ interface QuizQuestion {
   options: string[];
   correct: number;
   explanation: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+}
+
+interface InvestmentData {
+  amount: number;
+  years: number;
+  interestRate: number;
+  monthlyContribution: number;
+}
+
+interface UserProgress {
+  quizScore: number;
+  completedTests: number;
+  budgetPlans: number;
 }
 
 const Index = () => {
@@ -44,14 +58,28 @@ const Index = () => {
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
+  const [investmentData, setInvestmentData] = useState<InvestmentData>({
+    amount: 0,
+    years: 0,
+    interestRate: 0,
+    monthlyContribution: 0
+  });
+  const [userProgress, setUserProgress] = useState<UserProgress>({
+    quizScore: 0,
+    completedTests: 0,
+    budgetPlans: 0
+  });
 
-  const quizQuestions: QuizQuestion[] = [
+  const allQuizQuestions: QuizQuestion[] = [
+    // Beginner Level
     {
       id: 1,
       question: "Какой процент дохода рекомендуется откладывать на сбережения?",
       options: ["5%", "10-20%", "30%", "50%"],
       correct: 1,
-      explanation: "Финансовые эксперты рекомендуют откладывать 10-20% от дохода на сбережения и инвестиции."
+      explanation: "Финансовые эксперты рекомендуют откладывать 10-20% от дохода на сбережения и инвестиции.",
+      difficulty: 'beginner'
     },
     {
       id: 2,
@@ -63,7 +91,8 @@ const Index = () => {
         "Инвестиционный портфель"
       ],
       correct: 2,
-      explanation: "Экстренный фонд должен покрывать ваши расходы на 3-6 месяцев в случае потери дохода."
+      explanation: "Экстренный фонд должен покрывать ваши расходы на 3-6 месяцев в случае потери дохода.",
+      difficulty: 'beginner'
     },
     {
       id: 3,
@@ -75,9 +104,105 @@ const Index = () => {
         "Откладывать на год"
       ],
       correct: 0,
-      explanation: "Правило 24 часов: подождите день перед крупной покупкой, чтобы убедиться в её необходимости."
+      explanation: "Правило 24 часов: подождите день перед крупной покупкой, чтобы убедиться в её необходимости.",
+      difficulty: 'beginner'
+    },
+    {
+      id: 4,
+      question: "Что означает правило 50/30/20?",
+      options: [
+        "50% развлечения, 30% еда, 20% жильё",
+        "50% необходимые расходы, 30% желания, 20% сбережения",
+        "50% сбережения, 30% развлечения, 20% еда",
+        "50% инвестиции, 30% налоги, 20% расходы"
+      ],
+      correct: 1,
+      explanation: "Правило 50/30/20 помогает сбалансированно распределить доходы между основными категориями расходов.",
+      difficulty: 'beginner'
+    },
+    // Intermediate Level
+    {
+      id: 5,
+      question: "Что такое диверсификация инвестиций?",
+      options: [
+        "Вложение всех денег в одну акцию",
+        "Распределение инвестиций между разными активами",
+        "Покупка только государственных облигаций",
+        "Инвестирование только в недвижимость"
+      ],
+      correct: 1,
+      explanation: "Диверсификация снижает риски путём распределения инвестиций между различными типами активов.",
+      difficulty: 'intermediate'
+    },
+    {
+      id: 6,
+      question: "Какова основная цель ребалансировки портфеля?",
+      options: [
+        "Увеличить доходность любой ценой",
+        "Поддерживать желаемое соотношение активов",
+        "Продать все убыточные активы",
+        "Купить только растущие акции"
+      ],
+      correct: 1,
+      explanation: "Ребалансировка помогает поддерживать целевое распределение активов в соответствии с инвестиционной стратегией.",
+      difficulty: 'intermediate'
+    },
+    {
+      id: 7,
+      question: "Что показывает коэффициент Шарпа?",
+      options: [
+        "Только доходность инвестиции",
+        "Отношение доходности к принятому риску",
+        "Количество сделок в году",
+        "Размер комиссии брокера"
+      ],
+      correct: 1,
+      explanation: "Коэффициент Шарпа измеряет эффективность инвестиций с учётом принятого риска.",
+      difficulty: 'intermediate'
+    },
+    // Advanced Level
+    {
+      id: 8,
+      question: "Что такое эффект сложного процента?",
+      options: [
+        "Простое начисление процентов",
+        "Начисление процентов на проценты",
+        "Вычет налогов с процентов",
+        "Ежемесячная выплата процентов"
+      ],
+      correct: 1,
+      explanation: "Сложный процент - это начисление процентов не только на основную сумму, но и на уже начисленные проценты.",
+      difficulty: 'advanced'
+    },
+    {
+      id: 9,
+      question: "Что означает валютное хеджирование?",
+      options: [
+        "Покупка только рублёвых активов",
+        "Защита от валютных рисков",
+        "Инвестирование в криптовалюту",
+        "Обмен валют каждый день"
+      ],
+      correct: 1,
+      explanation: "Валютное хеджирование позволяет защитить портфель от неблагоприятных изменений курсов валют.",
+      difficulty: 'advanced'
+    },
+    {
+      id: 10,
+      question: "Какой показатель лучше всего отражает реальную доходность с учётом инфляции?",
+      options: [
+        "Номинальная доходность",
+        "Реальная доходность",
+        "Средняя доходность",
+        "Максимальная доходность"
+      ],
+      correct: 1,
+      explanation: "Реальная доходность учитывает влияние инфляции и показывает фактический рост покупательной способности.",
+      difficulty: 'advanced'
     }
   ];
+
+  const quizQuestions = allQuizQuestions.filter(q => q.difficulty === selectedDifficulty);
 
   const totalExpenses = Object.values(budgetData.expenses).reduce((sum, val) => sum + val, 0);
   const remainingBudget = budgetData.income - totalExpenses;
@@ -117,6 +242,29 @@ const Index = () => {
     setShowResults(false);
     setQuizStarted(false);
   };
+
+  const saveUserProgress = () => {
+    const newProgress = {
+      quizScore: Math.max(userProgress.quizScore, score),
+      completedTests: userProgress.completedTests + 1,
+      budgetPlans: userProgress.budgetPlans + (budgetData.income > 0 ? 1 : 0)
+    };
+    setUserProgress(newProgress);
+    localStorage.setItem('financeProgress', JSON.stringify(newProgress));
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('financeProgress');
+    if (saved) {
+      setUserProgress(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showResults) {
+      saveUserProgress();
+    }
+  }, [showResults]);
 
   const getScoreColor = () => {
     const percentage = (score / quizQuestions.length) * 100;
@@ -161,6 +309,40 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Progress Section */}
+      {(userProgress.completedTests > 0 || userProgress.budgetPlans > 0) && (
+        <section className="py-12 px-4 bg-slate-100">
+          <div className="max-w-4xl mx-auto text-center">
+            <h3 className="text-2xl font-bold text-slate-800 mb-8">Ваш прогресс</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <Icon name="Award" className="mx-auto mb-3 text-yellow-600" size={32} />
+                  <div className="text-2xl font-bold text-slate-800">{userProgress.quizScore}</div>
+                  <div className="text-sm text-slate-600">Лучший результат теста</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <Icon name="Brain" className="mx-auto mb-3 text-blue-600" size={32} />
+                  <div className="text-2xl font-bold text-slate-800">{userProgress.completedTests}</div>
+                  <div className="text-sm text-slate-600">Пройдено тестов</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <Icon name="Calculator" className="mx-auto mb-3 text-green-600" size={32} />
+                  <div className="text-2xl font-bold text-slate-800">{userProgress.budgetPlans}</div>
+                  <div className="text-sm text-slate-600">Планов бюджета</div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Features Section */}
       <section className="py-16 px-4">
@@ -218,10 +400,14 @@ const Index = () => {
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <Tabs defaultValue="calculator" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="calculator" className="text-lg">
                 <Icon name="Calculator" className="mr-2" size={20} />
-                Калькулятор
+                Бюджет
+              </TabsTrigger>
+              <TabsTrigger value="investment" className="text-lg">
+                <Icon name="TrendingUp" className="mr-2" size={20} />
+                Инвестиции
               </TabsTrigger>
               <TabsTrigger value="tips" className="text-lg">
                 <Icon name="Lightbulb" className="mr-2" size={20} />
@@ -486,6 +672,169 @@ const Index = () => {
               </div>
             </TabsContent>
 
+            {/* Investment Tab */}
+            <TabsContent value="investment">
+              <div className="grid lg:grid-cols-2 gap-8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Icon name="TrendingUp" className="mr-2" />
+                      Калькулятор инвестиций
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div>
+                      <Label htmlFor="initialAmount">Начальная сумма (₽)</Label>
+                      <Input
+                        id="initialAmount"
+                        type="number"
+                        placeholder="Введите сумму"
+                        onChange={(e) => setInvestmentData(prev => ({...prev, amount: Number(e.target.value)}))}
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="monthlyContribution">Ежемесячный взнос (₽)</Label>
+                      <Input
+                        id="monthlyContribution"
+                        type="number"
+                        placeholder="Дополнительные взносы"
+                        onChange={(e) => setInvestmentData(prev => ({...prev, monthlyContribution: Number(e.target.value)}))}
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="years">Срок инвестирования (лет)</Label>
+                      <Input
+                        id="years"
+                        type="number"
+                        placeholder="Количество лет"
+                        onChange={(e) => setInvestmentData(prev => ({...prev, years: Number(e.target.value)}))}
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="interestRate">Ожидаемая доходность (% в год)</Label>
+                      <Input
+                        id="interestRate"
+                        type="number"
+                        placeholder="Например: 8"
+                        onChange={(e) => setInvestmentData(prev => ({...prev, interestRate: Number(e.target.value)}))}
+                        className="mt-2"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Icon name="LineChart" className="mr-2" />
+                      Прогноз роста капитала
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {(() => {
+                      const { amount, years, interestRate, monthlyContribution } = investmentData;
+                      const monthlyRate = interestRate / 100 / 12;
+                      const totalMonths = years * 12;
+                      
+                      // Формула для расчета сложного процента с ежемесячными взносами
+                      const futureValueInitial = amount > 0 ? amount * Math.pow(1 + monthlyRate, totalMonths) : 0;
+                      const futureValueMonthly = monthlyContribution > 0 && monthlyRate > 0 ? 
+                        monthlyContribution * ((Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate) : 0;
+                      
+                      const totalFutureValue = futureValueInitial + futureValueMonthly;
+                      const totalInvested = amount + (monthlyContribution * totalMonths);
+                      const profit = totalFutureValue - totalInvested;
+
+                      return (
+                        <>
+                          <div className="text-center">
+                            <div className="text-3xl font-bold text-green-600 mb-2">
+                              {totalFutureValue.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₽
+                            </div>
+                            <div className="text-sm text-slate-600">
+                              Капитал через {years} лет
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="bg-slate-50 p-4 rounded-lg">
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="text-sm text-slate-600">Вложено всего:</span>
+                                <span className="font-semibold">
+                                  {totalInvested.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₽
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="text-sm text-slate-600">Прибыль:</span>
+                                <span className="font-semibold text-green-600">
+                                  {profit.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₽
+                                </span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-slate-600">Доходность:</span>
+                                <span className="font-semibold text-blue-600">
+                                  {totalInvested > 0 ? ((profit / totalInvested) * 100).toFixed(1) : 0}%
+                                </span>
+                              </div>
+                            </div>
+
+                            {years > 0 && (
+                              <div className="space-y-2">
+                                <h4 className="font-semibold text-sm">Рост по годам:</h4>
+                                {Array.from({length: Math.min(years, 5)}, (_, i) => {
+                                  const year = i + 1;
+                                  const yearlyMonths = year * 12;
+                                  const yearlyInitial = amount > 0 ? amount * Math.pow(1 + monthlyRate, yearlyMonths) : 0;
+                                  const yearlyMonthly = monthlyContribution > 0 && monthlyRate > 0 ? 
+                                    monthlyContribution * ((Math.pow(1 + monthlyRate, yearlyMonths) - 1) / monthlyRate) : 0;
+                                  const yearlyTotal = yearlyInitial + yearlyMonthly;
+                                  
+                                  return (
+                                    <div key={year} className="flex justify-between text-sm">
+                                      <span>Год {year}:</span>
+                                      <span className="font-medium">
+                                        {yearlyTotal.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₽
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                                {years > 5 && (
+                                  <div className="text-xs text-slate-500 text-center mt-2">
+                                    ... показано первые 5 лет
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          {amount > 0 && years > 0 && (
+                            <div className="bg-blue-50 p-4 rounded-lg">
+                              <h4 className="font-semibold mb-2 flex items-center">
+                                <Icon name="Lightbulb" className="mr-2" size={16} />
+                                Рекомендации:
+                              </h4>
+                              <div className="text-sm text-slate-600 space-y-1">
+                                {interestRate < 8 && <p>• Рассмотрите более доходные инструменты (ETF, акции)</p>}
+                                {monthlyContribution === 0 && <p>• Регулярные взносы увеличат итоговую сумму</p>}
+                                {years < 5 && <p>• Долгосрочные инвестиции более эффективны</p>}
+                                {years >= 10 && interestRate >= 8 && <p>• Отличная стратегия долгосрочного накопления!</p>}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
             {/* Quiz Tab */}
             <TabsContent value="quiz">
               <Card className="max-w-2xl mx-auto">
@@ -503,15 +852,56 @@ const Index = () => {
                     <div className="text-center space-y-6">
                       <div className="bg-blue-50 p-6 rounded-lg">
                         <Icon name="Info" className="mx-auto mb-4 text-blue-600" size={48} />
-                        <h3 className="font-semibold mb-2">О тесте:</h3>
-                        <p className="text-slate-600">
-                          {quizQuestions.length} вопросов о базовых принципах финансового планирования
+                        <h3 className="font-semibold mb-2">Выберите уровень сложности:</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                          <Button
+                            variant={selectedDifficulty === 'beginner' ? 'default' : 'outline'}
+                            onClick={() => setSelectedDifficulty('beginner')}
+                            className="p-4 h-auto flex-col"
+                          >
+                            <Icon name="Sprout" className="mb-2" size={24} />
+                            <div>
+                              <div className="font-semibold">Начальный</div>
+                              <div className="text-xs opacity-75">Основы финансов</div>
+                            </div>
+                          </Button>
+                          
+                          <Button
+                            variant={selectedDifficulty === 'intermediate' ? 'default' : 'outline'}
+                            onClick={() => setSelectedDifficulty('intermediate')}
+                            className="p-4 h-auto flex-col"
+                          >
+                            <Icon name="Target" className="mb-2" size={24} />
+                            <div>
+                              <div className="font-semibold">Средний</div>
+                              <div className="text-xs opacity-75">Инвестиции</div>
+                            </div>
+                          </Button>
+                          
+                          <Button
+                            variant={selectedDifficulty === 'advanced' ? 'default' : 'outline'}
+                            onClick={() => setSelectedDifficulty('advanced')}
+                            className="p-4 h-auto flex-col"
+                          >
+                            <Icon name="Trophy" className="mb-2" size={24} />
+                            <div>
+                              <div className="font-semibold">Продвинутый</div>
+                              <div className="text-xs opacity-75">Эксперт</div>
+                            </div>
+                          </Button>
+                        </div>
+                        
+                        <p className="text-slate-600 mt-4">
+                          {quizQuestions.length} вопросов уровня "{selectedDifficulty === 'beginner' ? 'Начальный' : selectedDifficulty === 'intermediate' ? 'Средний' : 'Продвинутый'}"
                         </p>
                       </div>
+                      
                       <Button 
                         onClick={() => setQuizStarted(true)}
                         size="lg"
                         className="bg-blue-600 hover:bg-blue-700"
+                        disabled={quizQuestions.length === 0}
                       >
                         Начать тест
                       </Button>
